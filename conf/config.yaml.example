@@ -1,0 +1,15 @@
+auth:
+  txMsSecretId: SecretId
+  txMsSecretKey: SecretKey
+
+shield:
+  apkSigner: "/usr/local/appLegu/lib/apksigner.jar"
+  apkAlign: "/usr/local/appLegu/lib/zipalign"
+  apkSigChecker: "/usr/local/appLegu/lib/CheckAndroidV2Signature.jar"
+  outDirectory: "/usr/local/appLegu/lib/pkgs"
+  signParams:
+    com_zw_cxtpro:
+      keyAlias: "App"
+      keyPassword: "app.zw.com"
+      storeFile: "/usr/local/appLegu/lib/conf/ZWKeystore.jks"
+      storePassword: "app.zw.com"
