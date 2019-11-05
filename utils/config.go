@@ -37,8 +37,14 @@ func ReadConf() (appConf Config, err error) {
 
 	myconf := Config{}
 	conf := viper.New()
-	conf.AddConfigPath("conf/")
 	conf.AddConfigPath("./")
+	conf.AddConfigPath("conf/")
+	conf.AddConfigPath("../conf/")
+	conf.AddConfigPath("/etc/applegu/")
+	conf.AddConfigPath("/usr/local/applegu/conf/")
+	conf.AddConfigPath("/usr/local/etc/")
+	conf.AddConfigPath("/usr/local/applegu/etc/")
+	conf.AddConfigPath("/etc/applegu/")
 	conf.SetConfigType("yaml")
 	if err := conf.ReadInConfig(); err != nil {
 		return myconf, err

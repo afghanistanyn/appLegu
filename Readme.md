@@ -1,4 +1,20 @@
 
+#### install
+
+##### install from source
+```$bash
+
+sh package.sh
+# now applegu.tar.gz in the top of the source code
+
+# install
+# tar vxzf applegu.tar.gz -C /usr/local/
+
+# run 
+# /usr/local/applegu/bin/appLegu
+
+```
+
 
 #### Shield Apis
 ```
