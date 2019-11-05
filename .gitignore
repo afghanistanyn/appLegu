@@ -4,3 +4,5 @@ pkgs/*.apk
 appLegu.exe
 vendor
 .idea/*
+go_build_main*.exe
+app*.exe

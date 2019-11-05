@@ -9,6 +9,7 @@ sh package.sh
 
 # install
 # tar vxzf applegu.tar.gz -C /usr/local/
+# chmod u+x /usr/local/applegu/lib/zipalign
 
 # run 
 # /usr/local/applegu/bin/appLegu
