@@ -30,21 +30,21 @@ var leguCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) error {
 
 		if len(pkgName) == 0 {
-			return errors.New("pkgName is required , like 'com.tx.webchat'")
+			return errors.New("pkgname is required , like 'com.tx.webchat'")
 		}
 
 		if len(pkgMd5) != 32 {
 			if len(pkgMd5) == 0 {
-				return errors.New("pkgMd5 is required")
+				return errors.New("pkgmd5 is required")
 			}
-			return errors.New("pkgMd5 with incorrect length, 32 characters required")
+			return errors.New("pkgmd5 with incorrect length, 32 characters required")
 		}
 		if len(pkgUrl) == 0 {
-			return errors.New("pkgUrl is required")
+			return errors.New("pkgurl is required")
 		}
 		_, err := url.Parse(pkgUrl)
 		if err != nil {
-			return errors.New("pkgUrl with incorrect format")
+			return errors.New("pkgurl with incorrect format")
 		}
 		return nil
 	},

@@ -32,13 +32,13 @@ var signCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) error {
 
 		if len(srcPkg) == 0 {
-			return errors.New("srcPkg is required")
+			return errors.New("srcpkg is required")
 		}
 
 		_, err := os.Stat(srcPkg)
 		if err != nil {
 			if !os.IsExist(err) {
-				return errors.New("srcPkg not exist")
+				return errors.New("srcpkg not exist")
 			}
 		}
 

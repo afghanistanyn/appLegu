@@ -30,7 +30,7 @@ var checkCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) error {
 
 		if len(itemId) == 0 {
-			return errors.New("itemId is required")
+			return errors.New("itemid is required")
 		}
 
 		return nil
