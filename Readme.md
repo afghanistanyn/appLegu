@@ -7,7 +7,7 @@
 #run package.sh to build and package applegu
 sh package.sh
 
-# install
+# install & upgrade
 tar vxzf applegu.tar.gz -C /usr/local/
 chmod u+x /usr/local/applegu/lib/zipalign
 
@@ -26,7 +26,7 @@ chmod u+x /usr/local/applegu/lib/zipalign
 
 
 #### Configure
-
+    cp /usr/local/applegu/conf/config.yaml.example /usr/local/applegu/conf/config.yaml
     vim /usr/local/applegu/conf/config.yaml
 
 ```yaml

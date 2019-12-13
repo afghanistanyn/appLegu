@@ -19,7 +19,6 @@ mkdir -p applegu
 cp -rf bin/ applegu
 rm -f applegu/bin/.gitkeep
 cp -rf conf/ applegu
-mv applegu/conf/config.yaml.example applegu/conf/config.yaml
 
 cp -rf lib/ applegu
 cp -rf pkgs/ applegu
