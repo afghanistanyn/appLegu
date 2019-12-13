@@ -23,6 +23,7 @@ type Shield struct {
 	ApkAlign      string                   `yaml:"apkAlign"`
 	ApkSigChecker string                   `yaml:"apkSigChecker"`
 	OutDirectory  string                   `yaml:"outDirectory"`
+	ShieldTimeout uint16                   `yaml:"shieldTimeout"`
 	Signparams    map[string]*AppSignParam `yaml:"signParams"`
 }
 

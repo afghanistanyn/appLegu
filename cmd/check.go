@@ -13,12 +13,35 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package cmd
 
 import (
-	"github.com/afghanistanyn/appLegu/cmd"
+	"errors"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd.Execute()
+var itemId string
+
+// signCmd represents the sign command
+var checkCmd = &cobra.Command{
+	Use:   "check",
+	Short: "check the shield process",
+
+	Args: func(cmd *cobra.Command, args []string) error {
+
+		if len(itemId) == 0 {
+			return errors.New("itemId is required")
+		}
+
+		return nil
+	},
+
+	Run: func(cmd *cobra.Command, args []string) {
+		Check(itemId)
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(checkCmd)
+	checkCmd.Flags().StringVar(&itemId, "itemid", "", "the id of shield process")
 }

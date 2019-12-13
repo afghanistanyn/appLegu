@@ -18,7 +18,7 @@ func GetAppSetInfoByPkgName(client *ms.Client, appPkgName string, appVersion str
 
 	request := ms.NewDescribeShieldInstancesRequest()
 	request.Filters = []*ms.Filter{
-		&ms.Filter{
+		{
 			Name:  common.StringPtr("AppPkgName"),
 			Value: common.StringPtr(appPkgName),
 		},
@@ -58,7 +58,20 @@ func GetAppSetInfoByPkgName(client *ms.Client, appPkgName string, appVersion str
 	return response.Response.AppSet[0], nil
 }
 
-func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string) (apkDlUrl string, err error) {
+func CheckShield(client *ms.Client, itemId string) {
+
+	req := ms.NewDescribeShieldResultRequest()
+	req.ItemId = &itemId
+	resultResp, err := client.DescribeShieldResult(req)
+	if err != nil {
+		fmt.Printf("error occurd when get shield result of itemid %s: %s", itemId, err)
+		os.Exit(-1)
+	}
+
+	fmt.Println(resultResp.ToJsonString())
+}
+
+func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string, waitTime uint16) (apkDlUrl string, err error) {
 
 	req := ms.NewCreateShieldInstanceRequest()
 	appInfo := ms.AppInfo{
@@ -89,8 +102,12 @@ func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string) 
 	// 任务状态: 1-已完成,2-处理中,3-处理出错,4-处理超时
 	//TaskStatus *uint64 `json:"TaskStatus,omitempty" name:"TaskStatus"`
 
-	//task timeout 10min + 30s
-	retry_count := 20
+	//get shield info every 30s
+	during := 30
+	if int(waitTime) < during {
+		waitTime = uint16(during)
+	}
+	retry_count := int(waitTime / uint16(during))
 	for i := 0; i <= retry_count; i++ {
 		shieldSetInfo, _ := GetAppSetInfoByPkgName(client, "", "", *itemId)
 
@@ -98,10 +115,10 @@ func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string) 
 		if *shieldSetInfo.TaskStatus == 2 {
 			//the last retry
 			if i == retry_count {
-				return "", mserrors.NewTencentCloudSDKError(string(*shieldSetInfo.TaskStatus), "加固超时", *shieldSetInfo.ItemId)
+				return "", mserrors.NewTencentCloudSDKError(string(*shieldSetInfo.TaskStatus), "shield timeout", *shieldSetInfo.ItemId)
 			}
 			fmt.Println("shielding ...")
-			time.Sleep(30 * time.Second)
+			time.Sleep(time.Duration(during) * time.Second)
 		}
 
 		if *shieldSetInfo.TaskStatus == 1 {
@@ -139,13 +156,22 @@ func ApkDownLoad(ApkUrl string, OutDirectory string) (dstFilePath string, err er
 	if err != nil {
 		return dstFilePath, err
 	}
-	defer dstApkFile.Close()
+
+	defer func() {
+		if ferr := dstApkFile.Close(); ferr != nil {
+			err = ferr
+		}
+	}()
 
 	resp, err := http.Get(ApkUrl)
 	if err != nil {
 		return dstFilePath, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if ferr := resp.Body.Close(); ferr != nil {
+			err = ferr
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return dstFilePath, fmt.Errorf("download apk file error http_status: %s", resp.Status)

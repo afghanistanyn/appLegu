@@ -1,70 +1,40 @@
+/*
+Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"net/url"
 	"os"
 )
 
-func init() {
-	rootCmd.Flags().StringP("pkgName", "n", "", "Bundle name of you apk")
-	rootCmd.Flags().StringP("pkgUrl", "u", "", "Download url of you apk, without auth (required)")
-	rootCmd.Flags().StringP("pkgMd5", "m", "", "Md5 hash of you apk (required)")
-
-	viper.BindPFlag("pkgName", rootCmd.Flags().Lookup("pkgName"))
-	viper.BindPFlag("pkgUrl", rootCmd.Flags().Lookup("pkgUrl"))
-	viper.BindPFlag("pkgMd5", rootCmd.Flags().Lookup("pkgMd5"))
-}
-
+// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "appLegu",
-	Short: "Used to shield apk by legu",
-	//Args: cobra.MinimumNArgs(1),
-	//Args: cobra.OnlyValidArgs,
-
-	Args: func(cmd *cobra.Command, args []string) error {
-		pkgurlp, _ := cmd.Flags().GetString("pkgUrl")
-		pkgmd5p, _ := cmd.Flags().GetString("pkgMd5")
-		pkgnamep, _ := cmd.Flags().GetString("pkgName")
-
-		if len(pkgnamep) == 0 {
-			return errors.New("pkgName is required , like 'com.tx.webchat'")
-		}
-
-		if len(pkgmd5p) != 32 {
-			if len(pkgmd5p) == 0 {
-				return errors.New("pkgMd5 is required")
-			}
-			return errors.New("pkgMd5 with incorrect length")
-		}
-		if len(pkgurlp) == 0 {
-			return errors.New("pkgUrl is required")
-		}
-		_, err := url.Parse(pkgurlp)
-		if err != nil {
-			return errors.New("pkgUrl with incorrect format")
-		}
-		return nil
-	},
-
-	Run: func(cmd *cobra.Command, args []string) {
-
-		pkgName := viper.GetString("pkgName")
-		pkgUrl := viper.GetString("pkgUrl")
-		pkgMd5 := viper.GetString("pkgMd5")
-
-		Legu(pkgName, pkgUrl, pkgMd5)
-	},
+	Short: "legu tools",
+	Long:  `used to legu shield or sign apk files`,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func init() {
+
 }
