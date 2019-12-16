@@ -16,50 +16,28 @@ chmod u+x /usr/local/applegu/lib/zipalign
 
 ```
 
-##### install from pre-build package
-```bash
-wget https://github.com/afghanistanyn/appLegu/releases/download/v0.2/applegu-v0.2.tar.gz
-tar vxzf applegu-v0.2.tar.gz -C /usr/local/
-chmod u+x /usr/local/applegu/lib/zipalign
-
+####Docker support
+```
+docker pull afghanistanyn/applegu:latest
 ```
 
-
-#### Configure
-    cp /usr/local/applegu/conf/config.yaml.example /usr/local/applegu/conf/config.yaml
-    vim /usr/local/applegu/conf/config.yaml
-
-```yaml
-auth:
-  txMsSecretId: SecretId
-  txMsSecretKey: SecretKey
-
-shield:
-  apkSigner: "/usr/local/applegu/lib/apksigner.jar"       #the path of apksigner
-  apkAlign: "/usr/local/applegu/lib/zipalign"             #the path of zipalign
-  apkSigChecker: "/usr/local/applegu/lib/CheckAndroidV2Signature.jar"       
-  outDirectory: "/usr/local/applegu/pkgs"                #the directory of output apks
-  shieldTimeout: 1800                                    #time for wait legu shield , check every 30 sec
-  signParams:
-    com_zw_cxtpro:                                      #the shield apk bundle name , concat with '_'
-      keyAlias: "App"                                   #the sign config of your apk
-      keyPassword: "cxtzwcom"
-      storeFile: "/usr/local/applegu/conf/ZWKeystore.jks"
-      storePassword: "cxtzwcom"
+test
+```
+docker run -it --rm afghanistanyn/applegu
 ```
 
-#### Run 
+mount conf and keystore
+```
+docker run -it --rm  -v /app/applegu/config.yaml:/usr/local/applegu/conf/config.yaml -v /app/applegu/xxx.jks:/usr/local/applegu/conf/xxx.jks afghanistanyn/applegu
+```
 
-    # legu apk (include resign)
-    /usr/local/applegu/bin/appLegu legu --pkgmd5 "xxx" --pkgname "xxx" --pkgurl "xxx"
+mount output dir
+```
+docker run -it --rm  -v /app/applegu/config.yaml:/usr/local/applegu/conf/config.yaml -v /app/applegu/xxx.jks:/usr/local/applegu/conf/xxx.jks -v /app/applegu/output:/usr/local/applegu/pkgs afghanistanyn/applegu
+```
 
-    #resign apk (resign only)
-    /usr/local/applegu/bin/appLegu sign --srcpkg "xxx"  --removealign "false"
-    
-    #check the shield status
-    /usr/local/applegu/bin/appLegu check --itemid "xxx"
-    
----- 
+----
+
 #### Ref:
 - https://github.com/TencentCloud/tencentcloud-sdk-go
 - https://cloud.tencent.com/document/product/283/17742
