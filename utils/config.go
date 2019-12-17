@@ -24,6 +24,7 @@ type Shield struct {
 	ApkSigChecker string                   `yaml:"apkSigChecker"`
 	OutDirectory  string                   `yaml:"outDirectory"`
 	ShieldTimeout uint16                   `yaml:"shieldTimeout"`
+	CheckInterval uint16                   `yaml:"checkInterval"`
 	Signparams    map[string]*AppSignParam `yaml:"signParams"`
 }
 

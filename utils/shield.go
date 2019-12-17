@@ -58,7 +58,7 @@ func GetAppSetInfoByPkgName(client *ms.Client, appPkgName string, appVersion str
 	return response.Response.AppSet[0], nil
 }
 
-func CheckShield(client *ms.Client, itemId string) {
+func CheckShield(client *ms.Client, itemId string) (success bool) {
 
 	req := ms.NewDescribeShieldResultRequest()
 	req.ItemId = &itemId
@@ -69,9 +69,14 @@ func CheckShield(client *ms.Client, itemId string) {
 	}
 
 	fmt.Println(resultResp.ToJsonString())
+
+	if *resultResp.Response.TaskStatus == 1 {
+		return true
+	}
+	return false
 }
 
-func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string, waitTime uint16) (apkDlUrl string, err error) {
+func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string, waitTime uint16, checkInterval uint16) (apkDlUrl string, err error) {
 
 	req := ms.NewCreateShieldInstanceRequest()
 	appInfo := ms.AppInfo{
@@ -103,11 +108,10 @@ func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string, 
 	//TaskStatus *uint64 `json:"TaskStatus,omitempty" name:"TaskStatus"`
 
 	//get shield info every 30s
-	during := 30
-	if int(waitTime) < during {
-		waitTime = uint16(during)
+	if waitTime < checkInterval {
+		waitTime = checkInterval
 	}
-	retry_count := int(waitTime / uint16(during))
+	retry_count := int(waitTime / checkInterval)
 	for i := 0; i <= retry_count; i++ {
 		shieldSetInfo, _ := GetAppSetInfoByPkgName(client, "", "", *itemId)
 
@@ -118,7 +122,7 @@ func ShieldPkg(client *ms.Client, pkgName string, pkgUrl string, pkgMd5 string, 
 				return "", mserrors.NewTencentCloudSDKError(string(*shieldSetInfo.TaskStatus), "shield timeout", *shieldSetInfo.ItemId)
 			}
 			fmt.Println("shielding ...")
-			time.Sleep(time.Duration(during) * time.Second)
+			time.Sleep(time.Duration(checkInterval) * time.Second)
 		}
 
 		if *shieldSetInfo.TaskStatus == 1 {

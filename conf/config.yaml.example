@@ -8,6 +8,7 @@ shield:
   apkSigChecker: "/usr/local/applegu/lib/CheckAndroidV2Signature.jar"
   outDirectory: "/usr/local/applegu/lib/pkgs"
   shieldTimeout: 1800
+  checkInterval: 30
   signParams:
     com_zw_cxtpro:
       keyAlias: "App"
