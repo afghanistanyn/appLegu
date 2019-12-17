@@ -21,6 +21,8 @@ import (
 )
 
 var itemId string
+var count, interval int
+var untilsuccess bool
 
 // signCmd represents the sign command
 var checkCmd = &cobra.Command{
@@ -33,15 +35,30 @@ var checkCmd = &cobra.Command{
 			return errors.New("itemid is required")
 		}
 
+		if len(itemId) < 32 {
+			return errors.New("itemid in error format")
+		}
+
+		if count < 0 {
+			return errors.New("check count > 0")
+		}
+
+		if interval < 0 {
+			return errors.New("check interval > 0")
+		}
+
 		return nil
 	},
 
 	Run: func(cmd *cobra.Command, args []string) {
-		Check(itemId)
+		Check(itemId, count, interval, untilsuccess)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(checkCmd)
-	checkCmd.Flags().StringVar(&itemId, "itemid", "", "the id of shield process")
+	checkCmd.Flags().StringVarP(&itemId, "itemid", "i", "", "the id of shield process")
+	checkCmd.Flags().IntVarP(&count, "count", "c", 1, "the count of check shield process, if success the process will exit")
+	checkCmd.Flags().IntVarP(&interval, "interval", "t", 30, "the interval of check shield process, unit sec")
+	checkCmd.Flags().BoolVarP(&untilsuccess, "untilsuccess", "f", false, "check the shield process until success, the count will be ignore if set")
 }

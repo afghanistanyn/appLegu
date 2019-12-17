@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/afghanistanyn/appLegu/utils"
 	"os"
+	"time"
 )
 
 func Legu(pkgName string, pkgUrl string, pkgMd5 string) {
@@ -23,7 +24,8 @@ func Legu(pkgName string, pkgUrl string, pkgMd5 string) {
 	//shield
 	fmt.Println("start shiled pkg: ", pkgName)
 	waitTime := conf.Shield.ShieldTimeout
-	apkDlUrl, err := utils.ShieldPkg(client, pkgName, pkgUrl, pkgMd5, waitTime)
+	checkInterval := conf.Shield.CheckInterval
+	apkDlUrl, err := utils.ShieldPkg(client, pkgName, pkgUrl, pkgMd5, waitTime, checkInterval)
 	if err != nil {
 		fmt.Println("an err occurd on shield pkg: ", err)
 		os.Exit(1)
@@ -93,7 +95,8 @@ func Sign(srcPkg string, removeAlign bool) {
 	fmt.Println("Sign Completion: ", SignedPkg)
 }
 
-func Check(itemId string) {
+//Check(itemId,count,interval,untilsuccess)
+func Check(itemId string, count int, interval int, untilsuccess bool) {
 	conf, err := utils.ReadConf()
 	if err != nil {
 		fmt.Println("an err occurd on read config file: ", err)
@@ -106,6 +109,21 @@ func Check(itemId string) {
 		os.Exit(1)
 	}
 
-	utils.CheckShield(client, itemId)
-
+	if untilsuccess {
+		for {
+			success := utils.CheckShield(client, itemId)
+			if success {
+				break
+			}
+			time.Sleep(time.Duration(interval) * time.Second)
+		}
+	} else {
+		for i := 0; i < count; i++ {
+			success := utils.CheckShield(client, itemId)
+			if success {
+				break
+			}
+			time.Sleep(time.Duration(interval) * time.Second)
+		}
+	}
 }
