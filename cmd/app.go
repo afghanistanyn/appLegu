@@ -25,6 +25,11 @@ func Legu(pkgName string, pkgUrl string, pkgMd5 string) {
 	fmt.Println("start shiled pkg: ", pkgName)
 	waitTime := conf.Shield.ShieldTimeout
 	checkInterval := conf.Shield.CheckInterval
+
+	if checkInterval == 0 {
+		checkInterval = 30
+	}
+
 	apkDlUrl, err := utils.ShieldPkg(client, pkgName, pkgUrl, pkgMd5, waitTime, checkInterval)
 	if err != nil {
 		fmt.Println("an err occurd on shield pkg: ", err)
