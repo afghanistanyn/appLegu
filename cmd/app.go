@@ -26,6 +26,10 @@ func Legu(pkgName string, pkgUrl string, pkgMd5 string) {
 	waitTime := conf.Shield.ShieldTimeout
 	checkInterval := conf.Shield.CheckInterval
 
+	if waitTime == 0 {
+		waitTime = 1800
+	}
+
 	if checkInterval == 0 {
 		checkInterval = 30
 	}
