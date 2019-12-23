@@ -9,19 +9,16 @@ sh package.sh
 
 # install
 tar vxzf applegu.tar.gz -C /usr/local/
-chmod u+x /usr/local/applegu/lib/zipalign
 
 # run 
-# /usr/local/applegu/bin/appLegu
+/usr/local/applegu/bin/appLegu
 
 ```
 
 ##### install from pre-build package
 ```bash
-wget https://github.com/afghanistanyn/appLegu/releases/download/v0.2/applegu-v0.2.tar.gz
-tar vxzf applegu-v0.2.tar.gz -C /usr/local/
-chmod u+x /usr/local/applegu/lib/zipalign
-
+wget -O applegu-latest.tar.gz $(curl -s https://api.github.com/repos/afghanistanyn/applegu/releases/latest | jq -r ".assets[] | .browser_download_url")
+tar vxzf applegu-latest.tar.gz -C /usr/local/
 ```
 
 

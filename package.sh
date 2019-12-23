@@ -29,6 +29,9 @@ if [ "$(hash upx)x" = "x" ];then
 	upx bin/appLegu
 fi
 
+chmod u+x applegu/lib/zipalign
+chmod u+x applegu/bin/appLegu
+
 tar vczf applegu.tar.gz applegu
 
 # clean
@@ -37,8 +40,7 @@ rm -rf applegu
 
 
 # install
-# tar vxzf applegu.tar.gz -C /usr/local/
-# chmod u+x /usr/local/applegu/lib/zipalign
+# tar vxzf applegu-latest.tar.gz -C /usr/local/
 
 # run 
 # /usr/local/applegu/bin/appLegu
