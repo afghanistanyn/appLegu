@@ -61,7 +61,7 @@ func Legu(pkgName string, pkgUrl string, pkgMd5 string) {
 
 	//resign
 	fmt.Println("resign shield apk file")
-	SignedPkg, err := utils.SignApk(conf, "com.zw.cxtpro", AlignDestPkg, true)
+	SignedPkg, err := utils.SignApk(conf, AlignDestPkg, true)
 	if err != nil {
 		fmt.Println("an err occurd on sign the apk file: ", err)
 		os.Exit(1)
@@ -89,7 +89,7 @@ func Sign(srcPkg string, removeAlign bool) {
 
 	//resign
 	fmt.Println("resign shield apk file")
-	SignedPkg, err := utils.SignApk(conf, "com.zw.cxtpro", AlignDestPkg, true)
+	SignedPkg, err := utils.SignApk(conf, AlignDestPkg, true)
 	if err != nil {
 		fmt.Println("an err occurd on sign the apk file: ", err)
 		_ = os.Remove(AlignDestPkg)

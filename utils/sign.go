@@ -2,15 +2,32 @@ package utils
 
 import (
 	"fmt"
+	"github.com/shogo82148/androidbinary/apk"
 	"os/exec"
 	"strings"
 )
 
-func SignApk(conf Config, appPkgName string, source string, checkv2 bool) (signDestPkg string, err error) {
+func SignApk(conf Config, source string, checkv2 bool) (signDestPkg string, err error) {
+
+	//parse pkgName
+	fmt.Println("SignApk, parse apk PackageName")
+	pkg, err := apk.OpenFile(source)
+	if err != nil {
+		return "", err
+	}
+	appPkgName := pkg.PackageName()
+	defer func() {
+		if ferr := pkg.Close(); ferr != nil {
+			err = ferr
+		}
+	}()
 
 	//the apkName in config file should be concat by '_'
 	appPkgNameKey := strings.Replace(appPkgName, ".", "_", -1)
 	appSignParam := conf.Shield.Signparams[appPkgNameKey]
+	if appSignParam == nil {
+		return "", fmt.Errorf("Sign params for %s not found in configure file", appPkgName)
+	}
 
 	apksigner := conf.Shield.ApkSigner
 
