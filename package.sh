@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -e
-
-# build 
+# build
 go mod vendor
 go build --ldflags '-w -s'
 
