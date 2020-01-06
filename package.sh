@@ -28,11 +28,14 @@ if [ "$VERSION"x = "x" ];then
 	VERSION=latest
 fi
 
+#force clean befor package
+rm -f bin/*
 
 # build
 go mod vendor
 GOOS=$ARCH GOARCH=amd64 go build --ldflags '-w -s'
 
+rm -f applegu/bin/.gitkeep
 if [ -f "appLegu" ];then
 	cp appLegu bin/
 elif [ -f "appLegu.exe" ];then
@@ -44,10 +47,8 @@ fi
 
 mkdir -p applegu
 
-cp -rf bin/ applegu
-rm -f applegu/bin/.gitkeep
 cp -rf conf/ applegu
-
+cp -rf bin/ applegu
 cp -rf lib/ applegu
 cp -rf pkgs/ applegu
 rm -f applegu/pkgs/.gitkeep
@@ -58,7 +59,9 @@ if [ "$(hash upx)x" = "x" ];then
 fi
 
 chmod u+x applegu/lib/zipalign
-chmod u+x applegu/bin/appLegu
+if [ -f "applegu/bin/appLegu" ];then
+	chmod u+x applegu/bin/appLegu 
+fi
 
 if [ "$ARCH"x = "windowsx" ];then
 	tar vczf applegu-windows-${VERSION}.tar.gz applegu

@@ -3,7 +3,7 @@ ENV GO111MODULE on
 WORKDIR /tmp/applegu_build
 COPY . /tmp/applegu_build
 RUN apk add upx \
-    && export GOPROXY="https://goproxy.cn" \
+    && export GOPROXY="https://goproxy.io" \
     && sh /tmp/applegu_build/package.sh
 
 FROM alpine:latest
