@@ -5,19 +5,19 @@
 ```bash
 
 #run package.sh to build and package applegu
-sh package.sh
+sh package.sh -a linux -v v1.0
 
 # install
-tar vxzf applegu.tar.gz -C /usr/local/
+tar vxzf applegu-v1.0.tar.gz -C /usr/local/
 
 # run 
 /usr/local/applegu/bin/appLegu
 
 ```
 
-##### install from pre-build package
+##### install from pre-build package (linux)
 ```bash
-wget -O applegu-latest.tar.gz $(curl -s https://api.github.com/repos/afghanistanyn/applegu/releases/latest | jq -r ".assets[] | .browser_download_url")
+wget -O applegu-latest.tar.gz $(curl -s https://api.github.com/repos/afghanistanyn/applegu/releases/latest | jq -r ".assets[] | .browser_download_url" | grep -v "windows")
 tar vxzf applegu-latest.tar.gz -C /usr/local/
 ```
 
