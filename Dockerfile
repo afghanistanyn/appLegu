@@ -14,12 +14,11 @@ LABEL maintainer="afghanistanyn@gmail.com"
 
 WORKDIR /usr/local/applegu
 
-COPY --from=build_env /tmp/applegu_build/applegu.tar.gz /app/
+COPY --from=build_env /tmp/applegu_build/applegu-latest.tar.gz /app/
 
 RUN apk --update add openjdk8-jre-base \
     && ls -al /app/ \
     && tar vxzf /app/applegu.tar.gz -C /usr/local/ \
-    && chmod u+x /usr/local/applegu/lib/zipalign \
     && rm /app -rf \
     && rm /var/cache/apk/* -rf
 
